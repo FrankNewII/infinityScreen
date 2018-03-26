@@ -1,0 +1,32 @@
+{
+  "name": "infinity-screen",
+  "version": "1.0.0",
+  "description": "Infinity Repeat of one screen",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FrankNewII/infinityScreen.git"
+  },
+  "keywords": [
+    "Infinity",
+    "Screen",
+    "Infinity",
+    "Scroll"
+  ],
+  "author": "Artem Chunikhin, FrankNew",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FrankNewII/infinityScreen/issues"
+  },
+  "homepage": "https://github.com/FrankNewII/infinityScreen#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^3.0.0",
+    "gulp-watch": "^5.0.0"
+  }
+}
