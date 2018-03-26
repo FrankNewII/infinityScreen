@@ -19,7 +19,7 @@ gulp.task( 'js:build', function () {
     gulp.src( gulpConfig.src )
         .pipe( concat( 'main.js' ) )
         .pipe( uglify() )
-        .pipe(rename('infinity-screen.js'))
+        .pipe(rename('infinity-screen.min.js'))
         .pipe( gulp.dest( gulpConfig.dist ) );
 } );
 
