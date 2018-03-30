@@ -1,6 +1,6 @@
 {
   "name": "infinity-screen",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Infinity Repeat of one screen",
   "main": "index.js",
   "scripts": {
