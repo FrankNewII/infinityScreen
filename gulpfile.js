@@ -2,6 +2,7 @@ var gulp = require( 'gulp' ),
     watch = require( 'gulp-watch' ),
     uglify = require( 'gulp-uglify' ),
     rename = require( 'gulp-rename' ),
+    sourcemaps = require( 'gulp-sourcemaps' ),
     concat = require( 'gulp-concat' );
 
 var gulpConfig = {
@@ -18,9 +19,12 @@ var gulpConfig = {
 
 gulp.task( 'js:build', function () {
     gulp.src( gulpConfig.src )
-        .pipe( concat( 'main.js' ) )
+        .pipe( sourcemaps.init() )
+        .pipe( concat( 'infinity-screen.js' ) )
+        .pipe( gulp.dest( gulpConfig.dist ) )
         .pipe( uglify() )
-        .pipe(rename('infinity-screen.min.js'))
+        .pipe( rename({suffix: '.min'}))
+        .pipe( sourcemaps.write())
         .pipe( gulp.dest( gulpConfig.dist ) );
 } );
 
