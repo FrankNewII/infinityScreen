@@ -50,6 +50,8 @@ InfinityScroll.prototype._uncatchUnbindedFn = function () {
 
         if (self.config.inertia) {
             self._inertionState.updateImpulses(e);
+            self._inertionState.inertionMove();
+
         }
     }
 };
@@ -110,18 +112,26 @@ InfinityScroll.InertionState = function (screen) {
     this._screen = screen;
     this._startX = undefined;
     this._startY = undefined;
+    this._readyToUpdatePos = true;
 };
 
 InfinityScroll.InertionState.prototype.updateImpulses = function (e) {
-    var moveTime = performance.now() - this._startDragTime;
-    var distanceX = e.clientX - this._startX;
-    var distanceY = e.clientY - this._startY;
-    var speedX = distanceX / moveTime;
-    var speedY = distanceY / moveTime;
-    var m = 50;
+    var self = this;
+    if( this._readyToUpdatePos ) {
+        self._readyToUpdatePos = false;
+        var moveTime = performance.now() - this._startDragTime;
+        var distanceX = e.clientX - this._startX;
+        var distanceY = e.clientY - this._startY;
+        var speedX = distanceX / moveTime;
+        var speedY = distanceY / moveTime;
+        var m = 50;
 
-    this._impulseX = speedX * m;
-    this._impulseY = speedY * m;
+        this._impulseX = speedX * m;
+        this._impulseY = speedY * m;
+        setTimeout(function () {
+            self._readyToUpdatePos = true;
+        }, 100);
+    }
 };
 
 InfinityScroll.InertionState.prototype.updateStartPos = function (e) {
