@@ -24,7 +24,7 @@ gulp.task( 'js:build', function () {
 } );
 
 gulp.task( 'watch', function () {
-    watch( gulpConfig.src, function ( event, cb ) {
+    watch( gulpConfig.src, function () {
         gulp.start( 'js:build' );
     } );
 } );
