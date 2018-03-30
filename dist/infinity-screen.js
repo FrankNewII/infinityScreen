@@ -116,8 +116,7 @@ InfinityScroll.InertionState = function (screen) {
 };
 
 InfinityScroll.InertionState.prototype.updateImpulses = function (e) {
-    var self = this;
-    if( this._readyToUpdatePos ) {
+
         self._readyToUpdatePos = false;
         var moveTime = performance.now() - this._startDragTime;
         var distanceX = e.clientX - this._startX;
@@ -128,16 +127,19 @@ InfinityScroll.InertionState.prototype.updateImpulses = function (e) {
 
         this._impulseX = speedX * m;
         this._impulseY = speedY * m;
+};
+
+InfinityScroll.InertionState.prototype.updateStartPos = function (e) {
+    var self = this;
+    if( this._readyToUpdatePos ) {
+        self._readyToUpdatePos = false;
+        this._startX = e.clientX;
+        this._startY = e.clientY;
+        this._startDragTime = performance.now();
         setTimeout(function () {
             self._readyToUpdatePos = true;
         }, 100);
     }
-};
-
-InfinityScroll.InertionState.prototype.updateStartPos = function (e) {
-    this._startX = e.clientX;
-    this._startY = e.clientY;
-    this._startDragTime = performance.now();
 };
 
 InfinityScroll.InertionState.prototype.inertionMove = function () {
