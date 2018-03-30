@@ -8,6 +8,7 @@ var gulpConfig = {
     src: [
         'src/infinity-screen.js',
         'src/infinity-screen.config.js',
+        'src/infinity-screen.inertion-state.js',
         'src/infinity-screen.overlay.js',
         'src/infinity-screen.map.js'
     ],
