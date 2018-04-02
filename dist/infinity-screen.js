@@ -51,7 +51,6 @@ InfinityScroll.prototype._uncatchUnbindedFn = function () {
         if (self.config.inertia) {
             self._inertionState.updateImpulses(e);
             self._inertionState.inertionMove();
-
         }
     }
 };
@@ -98,6 +97,8 @@ InfinityScroll.prototype._catchUnbindedFn = function () {
     var self = this;
     return function (e) {
         self.isCatched = true;
+        self._inertionState.updateStartPos(e);
+        self._inertionState.updateImpulses(e);
     }
 };
 InfinityScroll.Config = function () {
