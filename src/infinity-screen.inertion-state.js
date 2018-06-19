@@ -1,13 +1,13 @@
-InfinityScroll.InertionState = function (screen) {
+function InertionState (screen) {
     this._impulseX = 0;
     this._impulseY = 0;
     this._screen = screen;
     this._startX = undefined;
     this._startY = undefined;
     this._readyToUpdatePos = true;
-};
+}
 
-InfinityScroll.InertionState.prototype.updateImpulses = function (e) {
+InertionState.prototype.updateImpulses = function (e) {
 
         self._readyToUpdatePos = false;
         var moveTime = performance.now() - this._startDragTime;
@@ -21,7 +21,7 @@ InfinityScroll.InertionState.prototype.updateImpulses = function (e) {
         this._impulseY = speedY * m;
 };
 
-InfinityScroll.InertionState.prototype.updateStartPos = function (e) {
+InertionState.prototype.updateStartPos = function (e) {
     var self = this;
     if( this._readyToUpdatePos ) {
         self._readyToUpdatePos = false;
@@ -34,7 +34,7 @@ InfinityScroll.InertionState.prototype.updateStartPos = function (e) {
     }
 };
 
-InfinityScroll.InertionState.prototype.inertionMove = function () {
+InertionState.prototype.inertionMove = function () {
     if (!this._screen.isCatched) {
         var self = this;
 
@@ -53,3 +53,5 @@ InfinityScroll.InertionState.prototype.inertionMove = function () {
         }
     }
 };
+
+module.exports = InertionState;

@@ -1,4 +1,4 @@
-InfinityScroll.Overlay = function (scroll) {
+Overlay = function (scroll) {
     this._scroll = scroll;
     this.isShowed = false;
     this._elm = document.createElement('div');
@@ -9,7 +9,7 @@ InfinityScroll.Overlay = function (scroll) {
     this.init();
 };
 
-InfinityScroll.Overlay.prototype.init = function () {
+Overlay.prototype.init = function () {
     var el = this._elm;
     el.style['position'] = 'fixed';
     el.style['z-index'] = 10000;
@@ -23,14 +23,14 @@ InfinityScroll.Overlay.prototype.init = function () {
     document.body.appendChild(el);
 };
 
-InfinityScroll.Overlay.prototype.initListeners = function () {
+Overlay.prototype.initListeners = function () {
     var el = this._elm;
     el.addEventListener('mouseup', this._uncatchFn);
     //el.addEventListener('mousemove', this._move);
     //el.addEventListener('touchmove', this._move);
 };
 
-InfinityScroll.Overlay.prototype.hide = function () {
+Overlay.prototype.hide = function () {
     if (this.isShowed) {
         this._elm.style['display'] = 'none';
         document.body.style['user-select'] = null;
@@ -38,7 +38,7 @@ InfinityScroll.Overlay.prototype.hide = function () {
     }
 };
 
-InfinityScroll.Overlay.prototype.show = function () {
+Overlay.prototype.show = function () {
     if (!this.isShowed) {
         this._elm.style['display'] = 'block';
         document.body.style['user-select'] = 'none';
@@ -46,7 +46,7 @@ InfinityScroll.Overlay.prototype.show = function () {
     }
 };
 
-InfinityScroll.Overlay.prototype._uncatchUnbindedFn = function () {
+Overlay.prototype._uncatchUnbindedFn = function () {
     var self = this;
     return function () {
         self._scroll.isCatched = false;
@@ -56,7 +56,7 @@ InfinityScroll.Overlay.prototype._uncatchUnbindedFn = function () {
     }
 };
 
-InfinityScroll.Overlay.prototype._moveUnbindedFn = function () {
+Overlay.prototype._moveUnbindedFn = function () {
     var self = this;
     return function (e) {
         if (self.isShowed) {
@@ -73,3 +73,5 @@ InfinityScroll.Overlay.prototype._moveUnbindedFn = function () {
         }
     }
 };
+
+module.exports = Overlay;

@@ -1,4 +1,4 @@
-InfinityScroll.Map = function (screenElm, configRef) {
+function Map (screenElm, configRef) {
     this.width = undefined;
     this.height = undefined;
     this.posX = undefined;
@@ -11,13 +11,13 @@ InfinityScroll.Map = function (screenElm, configRef) {
 
     this.updateSizes();
     this.init();
-};
+}
 
-InfinityScroll.Map.prototype.initListeners = function () {
+Map.prototype.initListeners = function () {
     window.addEventListener('resize', this.resizeFn);
 };
 
-InfinityScroll.Map.prototype.updateSizes = function () {
+Map.prototype.updateSizes = function () {
     var sizes = this.screenElm.getBoundingClientRect();
     this.width = sizes.width;
     this.height = sizes.height;
@@ -25,10 +25,11 @@ InfinityScroll.Map.prototype.updateSizes = function () {
     this.posY = -sizes.height;
 };
 
-InfinityScroll.Map.prototype.resizeUnbindedFn = function () {
+Map.prototype.resizeUnbindedFn = function () {
     var self = this;
     var toPx = InfinityScroll.Map.toPx;
     var isChanged = false;
+
     return function (e) {
         if (!isChanged) {
             isChanged = true;
@@ -46,7 +47,7 @@ InfinityScroll.Map.prototype.resizeUnbindedFn = function () {
     }
 };
 
-InfinityScroll.Map.prototype.setPosX = function (x) {
+Map.prototype.setPosX = function (x) {
     if (!isNaN(x) && this.config.axisX) {
         this.posX = this.posX + x;
         this.posX = this.posX < 0 ? this.posX : -this.width;
@@ -55,7 +56,7 @@ InfinityScroll.Map.prototype.setPosX = function (x) {
     }
 };
 
-InfinityScroll.Map.prototype.setPosY = function (y) {
+Map.prototype.setPosY = function (y) {
     if (!isNaN(y) && this.config.axisY) {
         this.posY = this.posY + y;
         this.posY = this.posY < 0 ? this.posY : -this.height;
@@ -65,7 +66,7 @@ InfinityScroll.Map.prototype.setPosY = function (y) {
     }
 };
 
-InfinityScroll.Map.prototype.init = function () {
+Map.prototype.init = function () {
     var toPx = InfinityScroll.Map.toPx;
     var necessaryCopies = 1;
     if (this.config.axisX) {
@@ -96,7 +97,7 @@ InfinityScroll.Map.prototype.init = function () {
     this.screenElm.appendChild(this.elm);
 };
 
-InfinityScroll.Map.prototype.setState = function () {
+Map.prototype.setState = function () {
     var toPx = InfinityScroll.Map.toPx;
     if (this.config.axisY) {
         this.elm.style['height'] = toPx(this.height * (this.config.axisY ? 3 : 1));
@@ -108,6 +109,8 @@ InfinityScroll.Map.prototype.setState = function () {
     }
 };
 
-InfinityScroll.Map.toPx = function (px) {
+Map.toPx = function (px) {
     return px + 'px';
 };
+
+module.exports = Map;

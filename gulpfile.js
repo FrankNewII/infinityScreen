@@ -3,16 +3,11 @@ var gulp = require( 'gulp' ),
     uglify = require( 'gulp-uglify' ),
     rename = require( 'gulp-rename' ),
     sourcemaps = require( 'gulp-sourcemaps' ),
+    browserify = require( 'gulp-browserify' ),
     concat = require( 'gulp-concat' );
 
 var gulpConfig = {
-    src: [
-        'src/infinity-screen.js',
-        'src/infinity-screen.config.js',
-        'src/infinity-screen.inertion-state.js',
-        'src/infinity-screen.overlay.js',
-        'src/infinity-screen.map.js'
-    ],
+    src: 'src/infinity-screen.js',
     dist: 'dist/'
 };
 
@@ -20,7 +15,7 @@ var gulpConfig = {
 gulp.task( 'js:build', function () {
     gulp.src( gulpConfig.src )
         .pipe( sourcemaps.init() )
-        .pipe( concat( 'infinity-screen.js' ) )
+        .pipe( browserify() )
         .pipe( gulp.dest( gulpConfig.dist ) )
         .pipe( uglify() )
         .pipe( rename({suffix: '.min'}))

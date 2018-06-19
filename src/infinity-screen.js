@@ -1,11 +1,18 @@
+var Config = require('./infinity-screen.config.js'),
+    Map = require( './infinity-screen.inertion-state.js' ),
+    Overlay = require( './infinity-screen.overlay.js' ),
+    InertionState = require ( './infinity-screen.map.js' );
+
+
+
 function InfinityScroll(elm, config) {
     if (elm) {
         this.isCatched = false;
-        this.config = Object.assign(new InfinityScroll.Config, config || {});
+        this.config = Object.assign(new Config, config || {});
         this._elm = this._catchElm(elm);
-        this._map = new InfinityScroll.Map(this._elm, this.config);
-        this._overlay = new InfinityScroll.Overlay(this);
-        this._inertionState = new InfinityScroll.InertionState(this);
+        this._map = new Map(this._elm, this.config);
+        this._overlay = new Overlay(this);
+        this._inertionState = new InertionState(this);
 
         this._catchFn = this._catchUnbindedFn();
         this._uncatch = this._uncatchUnbindedFn();

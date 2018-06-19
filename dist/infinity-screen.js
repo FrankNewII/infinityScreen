@@ -1,11 +1,19 @@
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var Config = require('./infinity-screen.config.js'),
+    Map = require( './infinity-screen.inertion-state.js' ),
+    Overlay = require( './infinity-screen.overlay.js' ),
+    InertionState = require ( './infinity-screen.map.js' );
+
+
+
 function InfinityScroll(elm, config) {
     if (elm) {
         this.isCatched = false;
-        this.config = Object.assign(new InfinityScroll.Config, config || {});
+        this.config = Object.assign(new Config, config || {});
         this._elm = this._catchElm(elm);
-        this._map = new InfinityScroll.Map(this._elm, this.config);
-        this._overlay = new InfinityScroll.Overlay(this);
-        this._inertionState = new InfinityScroll.InertionState(this);
+        this._map = new Map(this._elm, this.config);
+        this._overlay = new Overlay(this);
+        this._inertionState = new InertionState(this);
 
         this._catchFn = this._catchUnbindedFn();
         this._uncatch = this._uncatchUnbindedFn();
@@ -101,22 +109,26 @@ InfinityScroll.prototype._catchUnbindedFn = function () {
         self._inertionState.updateImpulses(e);
     }
 };
-InfinityScroll.Config = function () {
+},{"./infinity-screen.config.js":2,"./infinity-screen.inertion-state.js":3,"./infinity-screen.map.js":4,"./infinity-screen.overlay.js":5}],2:[function(require,module,exports){
+function Config () {
     this.triggerMenuAttributeSelector = 'data-infinity-scroll';
     this.inertia = true;
     this.axisX = true;
     this.axisY = true;
 };
-InfinityScroll.InertionState = function (screen) {
+
+module.exports = Config;
+},{}],3:[function(require,module,exports){
+function InertionState (screen) {
     this._impulseX = 0;
     this._impulseY = 0;
     this._screen = screen;
     this._startX = undefined;
     this._startY = undefined;
     this._readyToUpdatePos = true;
-};
+}
 
-InfinityScroll.InertionState.prototype.updateImpulses = function (e) {
+InertionState.prototype.updateImpulses = function (e) {
 
         self._readyToUpdatePos = false;
         var moveTime = performance.now() - this._startDragTime;
@@ -130,7 +142,7 @@ InfinityScroll.InertionState.prototype.updateImpulses = function (e) {
         this._impulseY = speedY * m;
 };
 
-InfinityScroll.InertionState.prototype.updateStartPos = function (e) {
+InertionState.prototype.updateStartPos = function (e) {
     var self = this;
     if( this._readyToUpdatePos ) {
         self._readyToUpdatePos = false;
@@ -143,7 +155,7 @@ InfinityScroll.InertionState.prototype.updateStartPos = function (e) {
     }
 };
 
-InfinityScroll.InertionState.prototype.inertionMove = function () {
+InertionState.prototype.inertionMove = function () {
     if (!this._screen.isCatched) {
         var self = this;
 
@@ -162,82 +174,10 @@ InfinityScroll.InertionState.prototype.inertionMove = function () {
         }
     }
 };
-InfinityScroll.Overlay = function (scroll) {
-    this._scroll = scroll;
-    this.isShowed = false;
-    this._elm = document.createElement('div');
-    this._tempMousePosX = undefined;
-    this._tempMousePosY = undefined;
-    this._uncatchFn = this._uncatchUnbindedFn();
-    this._move = this._moveUnbindedFn();
-    this.init();
-};
 
-InfinityScroll.Overlay.prototype.init = function () {
-    var el = this._elm;
-    el.style['position'] = 'fixed';
-    el.style['z-index'] = 10000;
-    el.style['display'] = 'none';
-    el.style['height'] = '100%';
-    el.style['width'] = '100%';
-    el.style['top'] = '0';
-    el.style['left'] = '0';
-    el.style['cursor'] = 'move';
-    this.initListeners();
-    document.body.appendChild(el);
-};
-
-InfinityScroll.Overlay.prototype.initListeners = function () {
-    var el = this._elm;
-    el.addEventListener('mouseup', this._uncatchFn);
-    //el.addEventListener('mousemove', this._move);
-    //el.addEventListener('touchmove', this._move);
-};
-
-InfinityScroll.Overlay.prototype.hide = function () {
-    if (this.isShowed) {
-        this._elm.style['display'] = 'none';
-        document.body.style['user-select'] = null;
-        this.isShowed = false;
-    }
-};
-
-InfinityScroll.Overlay.prototype.show = function () {
-    if (!this.isShowed) {
-        this._elm.style['display'] = 'block';
-        document.body.style['user-select'] = 'none';
-        this.isShowed = true;
-    }
-};
-
-InfinityScroll.Overlay.prototype._uncatchUnbindedFn = function () {
-    var self = this;
-    return function () {
-        self._scroll.isCatched = false;
-        self._tempMousePosX = undefined;
-        self._tempMousePosY = undefined;
-        self.hide();
-    }
-};
-
-InfinityScroll.Overlay.prototype._moveUnbindedFn = function () {
-    var self = this;
-    return function (e) {
-        if (self.isShowed) {
-            if (e.type === 'mousemove') {
-                self._scroll.moveTo(e.clientX - self._tempMousePosX, e.clientY - self._tempMousePosY);
-                self._tempMousePosX = e.clientX;
-                self._tempMousePosY = e.clientY;
-            }
-            if (e.type === 'touchmove') {
-                self._scroll.moveTo(e.touches[0].clientX - self._tempMousePosX, e.touches[0].clientY - self._tempMousePosY);
-                self._tempMousePosX = e.touches[0].clientX;
-                self._tempMousePosY = e.touches[0].clientY;
-            }
-        }
-    }
-};
-InfinityScroll.Map = function (screenElm, configRef) {
+module.exports = InertionState;
+},{}],4:[function(require,module,exports){
+function Map (screenElm, configRef) {
     this.width = undefined;
     this.height = undefined;
     this.posX = undefined;
@@ -250,13 +190,13 @@ InfinityScroll.Map = function (screenElm, configRef) {
 
     this.updateSizes();
     this.init();
-};
+}
 
-InfinityScroll.Map.prototype.initListeners = function () {
+Map.prototype.initListeners = function () {
     window.addEventListener('resize', this.resizeFn);
 };
 
-InfinityScroll.Map.prototype.updateSizes = function () {
+Map.prototype.updateSizes = function () {
     var sizes = this.screenElm.getBoundingClientRect();
     this.width = sizes.width;
     this.height = sizes.height;
@@ -264,10 +204,11 @@ InfinityScroll.Map.prototype.updateSizes = function () {
     this.posY = -sizes.height;
 };
 
-InfinityScroll.Map.prototype.resizeUnbindedFn = function () {
+Map.prototype.resizeUnbindedFn = function () {
     var self = this;
     var toPx = InfinityScroll.Map.toPx;
     var isChanged = false;
+
     return function (e) {
         if (!isChanged) {
             isChanged = true;
@@ -285,7 +226,7 @@ InfinityScroll.Map.prototype.resizeUnbindedFn = function () {
     }
 };
 
-InfinityScroll.Map.prototype.setPosX = function (x) {
+Map.prototype.setPosX = function (x) {
     if (!isNaN(x) && this.config.axisX) {
         this.posX = this.posX + x;
         this.posX = this.posX < 0 ? this.posX : -this.width;
@@ -294,7 +235,7 @@ InfinityScroll.Map.prototype.setPosX = function (x) {
     }
 };
 
-InfinityScroll.Map.prototype.setPosY = function (y) {
+Map.prototype.setPosY = function (y) {
     if (!isNaN(y) && this.config.axisY) {
         this.posY = this.posY + y;
         this.posY = this.posY < 0 ? this.posY : -this.height;
@@ -304,7 +245,7 @@ InfinityScroll.Map.prototype.setPosY = function (y) {
     }
 };
 
-InfinityScroll.Map.prototype.init = function () {
+Map.prototype.init = function () {
     var toPx = InfinityScroll.Map.toPx;
     var necessaryCopies = 1;
     if (this.config.axisX) {
@@ -335,7 +276,7 @@ InfinityScroll.Map.prototype.init = function () {
     this.screenElm.appendChild(this.elm);
 };
 
-InfinityScroll.Map.prototype.setState = function () {
+Map.prototype.setState = function () {
     var toPx = InfinityScroll.Map.toPx;
     if (this.config.axisY) {
         this.elm.style['height'] = toPx(this.height * (this.config.axisY ? 3 : 1));
@@ -347,6 +288,87 @@ InfinityScroll.Map.prototype.setState = function () {
     }
 };
 
-InfinityScroll.Map.toPx = function (px) {
+Map.toPx = function (px) {
     return px + 'px';
 };
+
+module.exports = Map;
+},{}],5:[function(require,module,exports){
+Overlay = function (scroll) {
+    this._scroll = scroll;
+    this.isShowed = false;
+    this._elm = document.createElement('div');
+    this._tempMousePosX = undefined;
+    this._tempMousePosY = undefined;
+    this._uncatchFn = this._uncatchUnbindedFn();
+    this._move = this._moveUnbindedFn();
+    this.init();
+};
+
+Overlay.prototype.init = function () {
+    var el = this._elm;
+    el.style['position'] = 'fixed';
+    el.style['z-index'] = 10000;
+    el.style['display'] = 'none';
+    el.style['height'] = '100%';
+    el.style['width'] = '100%';
+    el.style['top'] = '0';
+    el.style['left'] = '0';
+    el.style['cursor'] = 'move';
+    this.initListeners();
+    document.body.appendChild(el);
+};
+
+Overlay.prototype.initListeners = function () {
+    var el = this._elm;
+    el.addEventListener('mouseup', this._uncatchFn);
+    //el.addEventListener('mousemove', this._move);
+    //el.addEventListener('touchmove', this._move);
+};
+
+Overlay.prototype.hide = function () {
+    if (this.isShowed) {
+        this._elm.style['display'] = 'none';
+        document.body.style['user-select'] = null;
+        this.isShowed = false;
+    }
+};
+
+Overlay.prototype.show = function () {
+    if (!this.isShowed) {
+        this._elm.style['display'] = 'block';
+        document.body.style['user-select'] = 'none';
+        this.isShowed = true;
+    }
+};
+
+Overlay.prototype._uncatchUnbindedFn = function () {
+    var self = this;
+    return function () {
+        self._scroll.isCatched = false;
+        self._tempMousePosX = undefined;
+        self._tempMousePosY = undefined;
+        self.hide();
+    }
+};
+
+Overlay.prototype._moveUnbindedFn = function () {
+    var self = this;
+    return function (e) {
+        if (self.isShowed) {
+            if (e.type === 'mousemove') {
+                self._scroll.moveTo(e.clientX - self._tempMousePosX, e.clientY - self._tempMousePosY);
+                self._tempMousePosX = e.clientX;
+                self._tempMousePosY = e.clientY;
+            }
+            if (e.type === 'touchmove') {
+                self._scroll.moveTo(e.touches[0].clientX - self._tempMousePosX, e.touches[0].clientY - self._tempMousePosY);
+                self._tempMousePosX = e.touches[0].clientX;
+                self._tempMousePosY = e.touches[0].clientY;
+            }
+        }
+    }
+};
+
+module.exports = Overlay;
+},{}]},{},[1])
